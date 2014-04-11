@@ -8,7 +8,7 @@ Mojolicious::Plugin::PDFRenderer - Uses wkhtmltopdf via PDF::WebKit to render yo
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
@@ -18,7 +18,14 @@ version 0.02
     sub startup {
         my $self = shift;
 
-        $self->plugin( 'Mojolicious::Plugin::PDFRenderer' );
+        $self->plugin( 'Mojolicious::Plugin::PDFRenderer', {
+            javascript_delay => 1000
+            , load_error_handling => 'ignore'
+            , page_height => '5in'
+            , page_width => '10.5in'
+            # options that would otherwise be passed to PDF::WebKit,
+            # see `wkhtmltopdf --extended-help` for more (replace dashes w/ underscores)
+        } );
         # ...
     }
 
@@ -31,6 +38,17 @@ Then go to http://yourapp:3000/any/route, take a good look, then go to http://yo
 =item L<PDF::WebKit>
 
 =item L<"wkhtmltopdf"|http://wkhtmltopdf.org/>
+
+=item A preforking server instance running (e.g. ./script/app prefork [...] or ./script/app hypnotoad [...], etc) with at least 2
+connections / workers available so that the extension can hit the back-end again, i.e. a request in a request.
+
+=back
+
+=head1 SEE ALSO
+
+=over 2
+
+=item Other cool stuff I've written
 
 =back
 
