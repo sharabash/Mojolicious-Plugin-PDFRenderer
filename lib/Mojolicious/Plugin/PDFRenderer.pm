@@ -2,7 +2,6 @@ package Mojolicious::Plugin::PDFRenderer;
 use Mojo::Base 'Mojolicious::Plugin';
 use PDF::WebKit;
 
-use feature ':5.10';
 sub register {
     my ( $self, $app, $opts ) = @_;
     $app->hook( around_action => sub {
