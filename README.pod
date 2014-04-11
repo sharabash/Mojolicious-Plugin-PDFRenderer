@@ -4,7 +4,7 @@
 
 =head1 NAME
 
-Mojolicious::Plugin::Args - gives you back the request parameters as a simple %args hash, even if it's posted in json.
+Mojolicious::Plugin::PDFRenderer -  
 
 =head1 VERSION
 
@@ -12,52 +12,27 @@ version 0.01
 
 =head1 SYNOPSIS
 
-Route something like this:
-
     package App;
     use Mojo::Base 'Mojolicious';
 
     sub startup {
         my $self = shift;
 
-        $self->plugin( 'Mojolicious::Plugin::Args' );
-
-        my $r = $self->routes;
-
-        $r->any( '/example/test' )->to( 'example#test' );
+        $self->plugin( 'Mojolicious::Plugin::PDFRenderer' );
+        # ...
     }
 
-Here's the controller:
+Then go to http://yourapp:3000/any/route, take a good look, then go to http://yourapp:3000/any/route.pdf. Cool, huh?
 
-    package App::Example;
-    use Mojo::Base 'Mojolicious::Controller';
+=head1 REQUIREMENTS
 
-    sub test {
-        my $self = shift;
-        my %args = $self->args;
+=over 2
 
-        $self->log->debug( 'args', $self->dumper( \%args ) );
-        $self->render( json => \%args );
-    }
+=item L<PDF::WebKit>
 
-Now send a POST to it (jQuery example):
+=item L<"wkhtmltopdf"|http://wkhtmltopdf.org/>
 
-    $.ajax( {
-        type: 'POST'
-        ,url: '/example/test'
-        ,contentType: 'application/json'
-        ,dataType: 'json'
-        ,data: JSON.stringify( { foo: 'bar' } )
-    } );
-
-Inspect the response. Keen. Try a GET on the endpoint with ".json" typed (C</example/test.json>) and a json query string variable (C<?json=...>). Same result.
-
-    $.ajax( {
-        type: 'GET'
-        ,url: '/example/test.json?json='+ JSON.stringify( { foo: 'bar' } )
-    } );
-
-Also, try regular query string vars (e.g. C<?foo=bar&baz=foo>) and form-url-encoded POST stuff. Works the same. All-in-one: no more dealing with the stupid C<param> helper.
+=back
 
 =for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
 
@@ -66,7 +41,7 @@ Also, try regular query string vars (e.g. C<?foo=bar&baz=foo>) and form-url-enco
 =head2 Bugs / Feature Requests
 
 Please report any bugs or feature requests through the issue tracker
-at L<https://github.com/sharabash/mojolicious-plugin-args/issues>.
+at L<https://github.com/sharabash/mojolicious-plugin-pdfrenderer/issues>.
 You will be notified automatically of any progress on your issue.
 
 =head2 Source Code
@@ -74,9 +49,9 @@ You will be notified automatically of any progress on your issue.
 This is open source software.  The code repository is available for
 public review and contribution under the terms of the license.
 
-L<https://github.com/sharabash/mojolicious-plugin-args>
+L<https://github.com/sharabash/mojolicious-plugin-pdfrenderer>
 
-  git clone git://github.com/sharabash/mojolicious-plugin-args.git
+  git clone git://github.com/sharabash/mojolicious-plugin-pdfrenderer.git
 
 =head1 AUTHOR
 
