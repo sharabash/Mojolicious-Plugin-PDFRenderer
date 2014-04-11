@@ -4,11 +4,11 @@
 
 =head1 NAME
 
-Mojolicious::Plugin::PDFRenderer -  
+Mojolicious::Plugin::PDFRenderer - Uses wkhtmltopdf via PDF::WebKit to render your app exactly as it looks in Chrome/WebKit but vector scalable and in PDF.
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 SYNOPSIS
 
