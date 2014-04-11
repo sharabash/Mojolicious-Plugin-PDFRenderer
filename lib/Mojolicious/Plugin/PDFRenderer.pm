@@ -7,7 +7,7 @@ sub register {
     # writing it now...
 }
 
-# ABSTRACT: 
+# ABSTRACT: Uses wkhtmltopdf via PDF::WebKit to render your app exactly as it looks in Chrome/WebKit but vector scalable and in PDF.
 1;
 
 =head1 SYNOPSIS
