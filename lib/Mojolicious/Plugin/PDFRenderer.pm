@@ -4,6 +4,9 @@ use PDF::WebKit;
 
 sub register {
     my ( $self, $app, $opts ) = @_;
+    $opts->{ '-args-override' } //= 1 unless exists $opts->{ '-args-override' };
+    my $args_override = delete $opts->{ '-args-override' };
+    $app->plugin( 'Mojolicious::Plugin::Args' ) if $args_override;
     $app->hook( around_action => sub {
         my ( $next, $c, $action, $last ) = @_;
         my $url  = $c->req->url->to_abs;
@@ -14,7 +17,13 @@ sub register {
 
             $app->log->debug( "...fetching url $url for pdf" );
 
-            my $kit = new PDF::WebKit ( $url, %{ $opts } );
+            my %opts = %{ $opts };
+            do {
+                my %args = $c->args;
+                $opts{ $_ } = $args{ $_ } for keys %args;
+                $app->log->debug( "pdf args override...", $app->dumper( \%opts ) ) if %args;
+            } if $args_override;
+            my $kit = new PDF::WebKit ( $url, %opts );
             my $pdf = $kit->to_pdf;
 
             $c->res->headers->content_type( 'application/pdf' );
