@@ -1,11 +1,16 @@
 package Mojolicious::Plugin::PDFRenderer;
 use Mojo::Base 'Mojolicious::Plugin';
 use PDF::WebKit;
+use List::AllUtils qw/uniq/;
 
 sub register {
     my ( $self, $app, $opts ) = @_;
     $opts->{ '-args-override' } //= 1 unless exists $opts->{ '-args-override' };
     my $args_override = delete $opts->{ '-args-override' };
+    my @opts = `wkhtmltopdf --extended-help`;
+       @opts = map { my $opt = $_; $opt =~ s/.*--([^ =,]+).*/$1/g; $opt =~ s/-/_/g; $opt =~ s/\W//g; $opt =~ s/_+$//g; $opt } grep { $_ =~ /--[^ =]+/ } @opts;
+       @opts = uniq @opts;
+    my %okay = map { $_ => 1 } @opts;
     $app->plugin( 'Mojolicious::Plugin::Args' ) if $args_override;
     $app->hook( around_action => sub {
         my ( $next, $c, $action, $last ) = @_;
@@ -20,8 +25,9 @@ sub register {
             my %opts = %{ $opts };
             do {
                 my %args = $c->args;
-                $opts{ $_ } = $args{ $_ } for keys %args;
-                $app->log->debug( "pdf args override...", $app->dumper( \%opts ) ) if %args;
+                my @keys = grep { $okay{ $_ } } keys %args;
+                $opts{ $_ } = $args{ $_ } for @keys;
+                $app->log->debug( "pdf args override...", $app->dumper( \%opts ) ) if @keys;
             } if $args_override;
             my $kit = new PDF::WebKit ( $url, %opts );
             my $pdf = $kit->to_pdf;
