@@ -8,7 +8,7 @@ Mojolicious::Plugin::PDFRenderer - Uses wkhtmltopdf via PDF::WebKit to render yo
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 SYNOPSIS
 
