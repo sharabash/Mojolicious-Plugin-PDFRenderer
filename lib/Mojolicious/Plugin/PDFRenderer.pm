@@ -20,7 +20,7 @@ sub register {
         return $next->() unless $c->stash->{format} and $c->stash->{format} eq 'pdf';
         $c->respond_to( pdf => sub {
             my $url  = $c->req->url->to_abs;
-               $url =~ s/\.pdf.*$//i;
+               $url =~ s/\.pdf($|\?)/$1/i;
 
             $app->log->debug( "...fetching url $url for pdf" );
 
